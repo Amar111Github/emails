@@ -32,8 +32,9 @@ app.post('/api/career', upload.single("resume"), (req, res) => {
   const { firstname, lastname, email, mobile, gender, position } = req.body;
   const resume = req.file;
   const mail = {
-    from:email,
     to: process.env.EMAIL_USER,
+    from: req.body.email,
+    
     subject: 'Kaper Website Career Form Submission',
     html: `
       <h3>Collaborative and innovative work environment</h3>
@@ -48,22 +49,22 @@ app.post('/api/career', upload.single("resume"), (req, res) => {
           filename: "resume.pdf", // Change the filename as needed
           content: resume.buffer,
         },
-        {
-          filename: "resume.txt", // Change the filename as needed
-          content: resume.buffer,
-        },
-        {
-          filename: "resume.jpg", // Change the filename as needed
-          content: resume.buffer,
-        },
-        {
-          filename: "resume.png", // Change the filename as needed
-          content: resume.buffer,
-        },
-        {
-          filename: "resume.doc", // Change the filename as needed
-          content: resume.buffer,
-        },
+        // {
+        //   filename: "resume.txt", // Change the filename as needed
+        //   content: resume.buffer,
+        // },
+        // {
+        //   filename: "resume.jpg", // Change the filename as needed
+        //   content: resume.buffer,
+        // },
+        // {
+        //   filename: "resume.png", // Change the filename as needed
+        //   content: resume.buffer,
+        // },
+        // {
+        //   filename: "resume.doc", // Change the filename as needed
+        //   content: resume.buffer,
+        // },
       ],
   };
   transporter.sendMail(mail, (error) => {
@@ -80,8 +81,8 @@ app.post('/api/contact', (req, res) => {
   const { firstname, lastname,email, mobile, requirement, message } = req.body;
 
   const mail = {
-    from: email,
-    to: process.env.EMAIL_USER,
+    from: req.body.email,
+    to: process.env.EMAIL_USER,  
     subject: 'Kaper Website Contact Form Submission',
     html: `
     <p>Firstname: ${firstname}</p>
@@ -91,11 +92,12 @@ app.post('/api/contact', (req, res) => {
       <p>Requirement: ${requirement}</p>
       <p>Message: ${message}</p>`,
   };
+
   transporter.sendMail(mail, (error) => {
     if (error) {
       console.error(error);
       res.status(500).json({ status: 'ERROR' });
-    } else { 
+    } else {
       res.json({ status: 'Message Sent' });
     }
   });
